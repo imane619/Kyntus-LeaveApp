@@ -1,3 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+
 
 @import "tailwindcss";
+
+
+body {
+  background-color: #f4f7fe; 
+  color: #2b3674;
+}
+
+/*  Une police  */
+body {
+  font-family: 'Inter', sans-serif;
+  @apply bg-gray-50;
+}
+
