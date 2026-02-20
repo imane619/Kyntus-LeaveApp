@@ -1,0 +1,124 @@
+<form class="space-y-6">
+  <div *ngIf="selectedReason === 'conge'" 
+       class="mb-6 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex justify-between items-center animate-in fade-in duration-500">
+    <span class="text-indigo-700 font-medium">Solde disponible</span>
+    <span class="bg-white px-3 py-1 rounded-full text-[#4318ff] font-bold shadow-sm">
+      {{ leaveBalance }} jours
+    </span>
+  </div>
+
+
+<div class="flex items-center space-x-2 mb-6">
+  <span class="text-sm font-semibold text-[#0b1437]">Statut :</span>
+  <span [ngClass]="{
+    'bg-blue-100 text-blue-700': requestStatus === 'Nouvelle',
+    'bg-yellow-100 text-yellow-700': requestStatus === 'En attente',
+    'bg-green-100 text-green-700': requestStatus === 'Validé',
+    'bg-red-100 text-red-700': requestStatus === 'Refusé'
+  }" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center shadow-sm">
+    <span [ngClass]="{
+      'bg-blue-500': requestStatus === 'Nouvelle',
+      'bg-yellow-500': requestStatus === 'En attente',
+      'bg-green-500': requestStatus === 'Validé',
+      'bg-red-500': requestStatus === 'Refusé'
+    }" class="w-2 h-2 rounded-full mr-2"></span>
+    {{ requestStatus }}
+  </span>
+ </div>
+
+  <div>
+    <label class="block text-sm font-semibold text-[#0b1437] mb-2">Nature de l'absence</label>
+    <select 
+      [(ngModel)]="selectedReason"
+      name="selectedReason"
+      (change)="onReasonChange($event)" 
+      class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl outline-none focus:border-[#4318ff] focus:bg-white transition-all cursor-pointer">
+      <option value="" disabled selected>Choisir un motif...</option>
+      <option value="conge"> Congé</option>
+      <option value="maladie"> Maladie</option>
+      <option value="empechement"> Empêchement</option>
+    </select>
+  </div>
+
+  <div *ngIf="selectedReason === 'maladie'" 
+       class="mt-4 p-4 border-2 border-dashed border-blue-100 rounded-2xl bg-blue-50/30 animate-in fade-in slide-in-from-top-2 duration-300">
+    <label class="block text-sm font-semibold text-[#0b1437] mb-2">Certificat Médical</label>
+    <div class="flex items-center justify-center w-full">
+      <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-white hover:bg-gray-50 transition-colors">
+        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+          <span class="text-2xl mb-2">📄</span>
+          <p class="text-sm text-gray-500"><span class="font-semibold">Cliquez pour uploader</span></p>
+          <p class="text-xs text-gray-400">PDF, JPG ou PNG (Max. 5MB)</p>
+        </div>
+        <input type="file" class="hidden" accept=".pdf,image/*" (change)="onFileSelected($event)" />
+      </label>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="text-xs font-bold text-gray-400 uppercase ml-1">Date début</label>
+      <input 
+        type="date" 
+        [(ngModel)]="startDate" 
+        name="startDate"
+        (change)="onDateChange()"
+        class="w-full p-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#4318ff] outline-none mt-1 transition-all">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-gray-400 uppercase ml-1">Date fin</label>
+      <input 
+        type="date" 
+        [(ngModel)]="endDate" 
+        name="endDate"
+        (change)="onDateChange()"
+        class="w-full p-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#4318ff] outline-none mt-1 transition-all">
+    </div>
+  </div>
+
+  <div>
+    <label class="block text-sm font-semibold text-[#0b1437] mb-2">Détails / Justification</label>
+    <textarea 
+      [(ngModel)]="justification" 
+      name="justification" 
+      placeholder="Précisez la raison..." rows="3" 
+      class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl outline-none focus:border-[#4318ff] resize-none transition-all">
+    </textarea>
+  </div>
+  
+  <div *ngIf="startDate && endDate" class="p-4 bg-gray-50 rounded-2xl border border-gray-100 animate-in zoom-in duration-300">
+    <div class="flex justify-between items-center mb-2">
+      <span class="text-sm font-bold" 
+            [ngClass]="{'text-green-600': impactPercentage >= 80, 
+                        'text-orange-500': impactPercentage < 80 && impactPercentage >= 60,
+                        'text-red-600': impactPercentage < 60}">
+        {{ impactMessage }}
+      </span>
+      <span class="text-xs font-bold text-gray-500">{{ impactPercentage }}% Couverture</span>
+    </div>
+    <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+      <div class="h-full transition-all duration-700"
+           [style.width.%]="impactPercentage"
+           [ngClass]="{'bg-green-500': impactPercentage >= 80, 
+                       'bg-orange-400': impactPercentage < 80 && impactPercentage >= 60,
+                       'bg-red-500': impactPercentage < 60}">
+      </div>
+    </div>
+    <p *ngIf="impactPercentage < 60" class="text-[10px] text-red-500 mt-2 italic font-medium">
+      ⚠️ Attention : Le seuil de sécurité de la cellule est critique.
+    </p>
+  </div>
+
+<button 
+  type="button" 
+  (click)="onSubmit()"
+  [disabled]="isSubmitDisabled()"
+  class="w-full bg-[#4318ff] text-white py-4 rounded-2xl font-bold shadow-lg transition-all transform hover:scale-[1.01] disabled:opacity-50 disabled:bg-gray-400 disabled:scale-100">
+  <span *ngIf="!isSubmitDisabled()">Envoyer la demande</span>
+  <span *ngIf="isSubmitDisabled()">Veuillez vérifier les informations</span>
+</button>
+  
+  <p *ngIf="selectedReason === 'conge' && calculateDays() > leaveBalance" class="text-center text-xs text-red-500 font-bold mt-2">
+    Solde insuffisant (Demandé: {{ calculateDays() }}j / Disponible: {{ leaveBalance }}j)
+  </p>
+</form>

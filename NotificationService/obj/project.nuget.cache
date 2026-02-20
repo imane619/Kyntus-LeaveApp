@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "XK1v1YDNRro=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\IMANE.OUARY\\NotificationService\\NotificationService.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\IMANE.OUARY\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.3\\microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
+    "C:\\Users\\IMANE.OUARY\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\IMANE.OUARY\\.nuget\\packages\\rabbitmq.client\\7.2.0\\rabbitmq.client.7.2.0.nupkg.sha512"
+  ],
+  "logs": []
+}
